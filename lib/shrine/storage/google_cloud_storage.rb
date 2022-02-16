@@ -10,7 +10,7 @@ class Shrine
       # Initialize a Shrine::Storage for GCS allowing for auto-discovery of the Google::Cloud::Storage client.
       # @param [String] project Provide if not using auto discovery
       # @see http://googlecloudplatform.github.io/google-cloud-ruby/#/docs/google-cloud-storage/v1.6.0/guides/authentication#environmentvariables for information on discovery
-      def initialize(project: nil, bucket:, prefix: nil, host: nil, default_acl: nil, object_options: {}, credentials: nil)
+      def initialize(project: nil, bucket:, prefix: nil, host: nil, default_acl: nil, object_options: {}, storage_options: {}, credentials: nil)
         @project = project
         @bucket = bucket
         @prefix = prefix
@@ -19,6 +19,7 @@ class Shrine
         @object_options = object_options
         @storage = nil
         @credentials = credentials
+        @storage_options = storage_options
       end
 
       # If the file is an UploadFile from GCS, issues a copy command, otherwise it uploads a file.
@@ -155,7 +156,7 @@ class Shrine
       def storage
         return @storage if @storage
 
-        opts = {}
+        opts = @storage_options || {}
         opts[:project] = @project if @project
         opts[:credentials] = @credentials if @credentials
 
