@@ -156,9 +156,10 @@ class Shrine
       def storage
         return @storage if @storage
 
-        opts = @storage_options || {}
+        opts = {}
         opts[:project] = @project if @project
         opts[:credentials] = @credentials if @credentials
+        opts.merge(@storage_options.symbolize_keys) if @storage_options
 
         @storage = Google::Cloud::Storage.new(**opts)
       end
